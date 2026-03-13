@@ -272,4 +272,5 @@ p3 = ggplot(data.frame(distances = dyy), aes(x = distances, y = ..density..)) +
   )
 
 
-g = grid.arrange(p1, p3, p2, ncol=3)
+
+g = grid.arrange(p1, p2, p3, ncol=3)

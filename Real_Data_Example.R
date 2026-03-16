@@ -2,9 +2,9 @@
 # Script: Real_Data_Example.R
 #
 # Purpose:
-# Reproduce the example from the article "A two-sample test based on 
-# averaged Wilcoxon rank sums over interpoint distances" using the
-# GSE71661 miRNA count dataset, including:
+# Reproduce the example from the article "A TWO-SAMPLE TEST BASED ON AVERAGED 
+# WILCOXON RANK SUMS OVER INTERPOINT DISTANCES" (https://arxiv.org/pdf/2408.10570) 
+# using the GSE71661 miRNA count dataset, including:
 #
 #   1) differential expression analysis with edgeR,
 #   2) stepwise feature selection based on the top-ranked miRNAs,

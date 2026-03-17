@@ -36,16 +36,21 @@
 # Project:  Two sample averaged Wilcoxon over interpoint distances
 ###############################################################################
 
-library(dplyr)
 library(tidyverse)
 library(gridExtra)
 library(readxl)
 library(edgeR)
-library(ggplot2)
-library(tidyr)
 library(patchwork)
 library(ICSNP)
 library(cramer)
+
+library(energy)      # eqdist.etest
+library(SpatialNP)   # sr.loc.test
+library(DepthProc)   # mWilcoxonTest
+library(kernlab)     # rbfdot
+library(Ecume)       # mmd_test
+library(FNN)         # get.knn
+library(npmv)
 
 ###############################################################################
 # Index construction for interpoint distance comparisons
@@ -120,15 +125,14 @@ ind_wilcox_reject <- function(X, Y, method = "euclidean", alpha = 0.05) {
   # choose r distinct Y-observations
   iy_b <- sample(seq_len(m), r, replace = FALSE)
   
-  # independent XX distances
-  if (method == "euclidean") {
-    dxx <- sqrt(rowSums((X[x1, , drop = FALSE] - X[x2, , drop = FALSE])^2))
-    dxy <- sqrt(rowSums((X[ix_b, , drop = FALSE] - Y[iy_b, , drop = FALSE])^2))
-  } else if (method == "manhattan") {
-    dxx <- rowSums(abs(X[x1, , drop = FALSE] - X[x2, , drop = FALSE]))
-    dxy <- rowSums(abs(X[ix_b, , drop = FALSE] - Y[iy_b, , drop = FALSE]))
-  } else {
-    stop("method must be 'euclidean' or 'manhattan'")
+  # independent XX and XY distances
+  dxx <- numeric(r)
+  dxy <- numeric(r)
+  
+  for (i in seq_len(r)) {
+    dxx[i] <- as.numeric(dist(rbind(X[x1[i], , drop = FALSE], X[x2[i], , drop = FALSE]),method = method))
+    
+    dxy[i] <- as.numeric(dist(rbind(X[ix_b[i], , drop = FALSE], Y[iy_b[i], , drop = FALSE]),method = method))
   }
   
   pval <- wilcox.test(dxx, dxy, alternative = "two.sided", exact = FALSE)$p.value
